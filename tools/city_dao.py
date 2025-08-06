@@ -39,6 +39,14 @@ class CityDao(BaseDao):
         except Exception as e:
             self.logger.error("保存城市失败", e)
 
+    def get_city_by_uuid(self, uuid: str) -> City | T:
+        """根据城市名称获取城市"""
+        try:
+            return self.db.query(City).filter(City.id == uuid).first()
+        except Exception as e:
+            self.logger.error("获取城市失败", e)
+            return self._handle_exception(e, "获取城市失败")
+
     def save_cities(self, cities: List[City]) -> List[City] | None:
         """保存城市"""
         try:
