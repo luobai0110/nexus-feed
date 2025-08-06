@@ -1,6 +1,11 @@
-def main():
-    print("Hello from nexus-feed!")
+from flask import Flask
+
+from controllers.weather import weather_bp
+
+app = Flask(__name__)
 
 
-if __name__ == "__main__":
-    main()
+app.register_blueprint(weather_bp)
+@app.route('/')
+def hello_world():
+    return '<h1>nexus-feed</h1>'
