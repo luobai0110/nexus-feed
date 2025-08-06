@@ -1,6 +1,6 @@
 from flask import Flask
 
-from controllers.weather import weather_bp
+from controllers.weather_controller import weather_bp
 
 app = Flask(__name__)
 

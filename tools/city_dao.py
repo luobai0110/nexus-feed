@@ -22,10 +22,10 @@ class CityDao(BaseDao):
     def __init__(self, db: Session):
         super().__init__(db)
 
-    def get_city(self, city_name: str) -> list[type[City]] | T:
+    def get_city(self, city_name: str) -> City | T:
         """根据城市名称获取城市"""
         try:
-            return self.db.query(City).filter(City.chinese_name == city_name).all()
+            return self.db.query(City).filter(City.chinese_name == city_name).first()
         except Exception as e:
             self.logger.error("获取城市失败", e)
             return self._handle_exception(e, "获取城市失败")
