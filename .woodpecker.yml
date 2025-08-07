@@ -1,4 +1,8 @@
 steps:
+  - name: prepare-git
+    image: alpine/git
+    commands:
+      - git config --global http.sslVerify false
   - name: build-and-push
     image: docker:24.0.2-dind
     environment:
