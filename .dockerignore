@@ -1,4 +1,47 @@
-__pycache__
+# Git
 .git
-.venv
-*.pyc
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 环境变量和配置
+.env
+.env.*
+!.env.example
+
+# 编辑器和IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志和临时文件
+*.log
+tmp/
+temp/
+
+# 测试和文档
+tests/
+docs/
+*.md
+!README.md
+
+# 其他
+.pytest_cache/
+.coverage
+htmlcov/
