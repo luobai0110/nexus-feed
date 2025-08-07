@@ -1,27 +1,29 @@
-kind: pipeline
-type: docker
-name: flask-swarm-deploy
-
 steps:
   - name: build-and-push
-    image: docker:24.0.2
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    image: docker:24.0.2-dind
     environment:
       DOCKER_USERNAME:
         from_secret: DOCKER_USERNAME
       DOCKER_PASSWORD:
         from_secret: DOCKER_PASSWORD
     commands:
-      - docker build -t "registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${DRONE_COMMIT_SHA}" .
+      - dockerd-entrypoint.sh &  # 启动 docker daemon（因为是 dind）
+      - sleep 10
+      - docker info
+      - docker build -t registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA} .
       - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
-      - docker push "registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${DRONE_COMMIT_SHA}"
-
+      - docker push registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA}
+    when:
+      event:
+        - push
 
   - name: deploy-swarm
-    image: docker:24.0.2
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    image: docker:24.0.2-dind
     commands:
-      - export IMAGE_TAG=${DRONE_COMMIT_SHA}
+      - dockerd-entrypoint.sh &  # 启动 docker daemon
+      - sleep 10
+      - docker info
       - docker stack deploy -c docker-compose.yml weather-stack --with-registry-auth
+    when:
+      event:
+        - push
