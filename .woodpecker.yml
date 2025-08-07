@@ -1,11 +1,7 @@
 environment:
-  GIT_SSL_NO_VERIFY: "true"
+  CI_REPO_TRUSTED_NETWORK: "true"
 
 steps:
-  - name: prepare-git
-    image: alpine/git
-    commands:
-      - git config --global http.sslVerify false
   - name: build-and-push
     image: docker:24.0.2-dind
     environment:
