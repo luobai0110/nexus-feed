@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from tools import mongo_dao
 
-load_dotenv("../.env")
+load_dotenv()
 amap_key = os.getenv("AMAP_KEY")
 
 amap_url = "https://restapi.amap.com/v3/weather/weatherInfo?key=" + amap_key
