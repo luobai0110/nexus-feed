@@ -31,7 +31,7 @@ steps:
     image: docker:24.0.2-dind
     when:
       - event: push
-        branch: [ release/*, test/* ]
+        branch: [ release/*, test/*]
     commands:
       - dockerd-entrypoint.sh &
       - |
