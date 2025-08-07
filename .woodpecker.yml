@@ -3,6 +3,7 @@ clone:
     image: woodpeckerci/plugin-git
     settings:
       skip-verify: true
+
 steps:
   - name: build-and-push
     image: docker:24.0.2-dind
