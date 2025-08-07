@@ -1,5 +1,7 @@
-environment:
-  CI_REPO_CLONE_URL: "http://git.yuanzhou.site/doomer/nexus-feed.git"
+clone:
+  git:
+    settings:
+      skip-verify: true
 
 steps:
   - name: build-and-push
