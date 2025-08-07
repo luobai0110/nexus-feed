@@ -7,9 +7,6 @@ clone:
 steps:
   - name: build-and-push
     image: docker:24.0.2-dind
-    when:
-      - event: push
-        branch: [release/*, test/*]
     environment:
       DOCKER_USERNAME:
         from_secret: DOCKER_USERNAME
@@ -29,9 +26,6 @@ steps:
 
   - name: deploy-swarm
     image: docker:24.0.2-dind
-    when:
-      - event: push
-        branch: [ release/*, test/*]
     commands:
       - dockerd-entrypoint.sh &
       - |
