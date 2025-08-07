@@ -24,9 +24,6 @@ steps:
       - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
       - docker build -t registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA} .
       - docker push registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA}
-    when:
-      event:
-        - push
 
   - name: deploy-swarm
     image: docker:24.0.2-dind
@@ -38,6 +35,3 @@ steps:
           sleep 1
         done
       - docker stack deploy -c docker-compose.yml weather-stack --with-registry-auth
-    when:
-      event:
-        - push
