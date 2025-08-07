@@ -13,12 +13,10 @@ steps:
       DOCKER_PASSWORD:
         from_secret: DOCKER_PASSWORD
     commands:
-      - >
-        docker build -t
-        registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${DRONE_COMMIT_SHA}
-        .
+      - docker build -t "registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${DRONE_COMMIT_SHA}" .
       - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
-      - docker push registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${DRONE_COMMIT_SHA}
+      - docker push "registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${DRONE_COMMIT_SHA}"
+
 
   - name: deploy-swarm
     image: docker:24.0.2
