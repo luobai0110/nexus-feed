@@ -7,11 +7,16 @@ steps:
       DOCKER_PASSWORD:
         from_secret: DOCKER_PASSWORD
     commands:
-      - dockerd-entrypoint.sh &  # 启动 docker daemon（因为是 dind）
-      - sleep 10
-      - docker info
-      - docker build -t registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA} .
+      - git config --global http.sslVerify false
+      - dockerd-entrypoint.sh &
+      - |
+        # 等待 docker daemon 就绪
+        until docker info 2>/dev/null; do
+          echo "Waiting for docker daemon..."
+          sleep 1
+        done
       - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
+      - docker build -t registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA} .
       - docker push registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA}
     when:
       event:
@@ -20,9 +25,12 @@ steps:
   - name: deploy-swarm
     image: docker:24.0.2-dind
     commands:
-      - dockerd-entrypoint.sh &  # 启动 docker daemon
-      - sleep 10
-      - docker info
+      - dockerd-entrypoint.sh &
+      - |
+        until docker info 2>/dev/null; do
+          echo "Waiting for docker daemon..."
+          sleep 1
+        done
       - docker stack deploy -c docker-compose.yml weather-stack --with-registry-auth
     when:
       event:
