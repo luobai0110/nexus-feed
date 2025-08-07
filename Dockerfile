@@ -20,10 +20,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 
 # 安装依赖
-RUN pip install --no-cache-dir --upgrade pip \
+RUN pip install --no-cache-dir -root-user-action=ignore --upgrade pip \
     -i https://pypi.tuna.tsinghua.edu.cn/simple/ \
     --trusted-host pypi.tuna.tsinghua.edu.cn && \
-    pip install --no-cache-dir -r requirements.txt \
+    pip install --no-cache-dir -root-user-action=ignore -r requirements.txt \
     -i https://pypi.tuna.tsinghua.edu.cn/simple/ \
     --trusted-host pypi.tuna.tsinghua.edu.cn
 
@@ -34,4 +34,4 @@ COPY . .
 EXPOSE 8000
 
 # 运行应用
-CMD ["flask", "run", "--host=0.0.0.0", "--port=8000"]
+CMD["python", "main.py"]
