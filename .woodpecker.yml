@@ -1,0 +1,43 @@
+kind: pipeline
+type: docker
+name: flask-swarm-deploy
+
+steps:
+  - name: install-deps
+    image: python:3.13.5-slim
+    commands:
+      - python -m venv venv
+      - source venv/bin/activate
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+
+  - name: build-and-push
+    image: docker:24.0.2
+    environment:
+      DOCKER_HOST: tcp://192.168.78.4:2375
+      DOCKER_TLS_VERIFY: "0"
+      DOCKER_USERNAME:
+        from_secret: DOCKER_USERNAME
+      DOCKER_PASSWORD:
+        from_secret: DOCKER_PASSWORD
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      # 构建镜像
+      - docker build -t registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${DRONE_COMMIT_SHA} .
+      # 登录并推送
+      - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
+      - docker push registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${DRONE_COMMIT_SHA}
+
+  - name: deploy-swarm
+    image: docker:24.0.2
+    environment:
+      DOCKER_HOST: tcp://192.168.78.4:2375
+      DOCKER_TLS_VERIFY: "0"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      # 设置当前 commit 的镜像标签到环境变量（用于 compose）
+      - export IMAGE_TAG=${DRONE_COMMIT_SHA}
+      # 使用 docker stack 部署（会自动替换 ${DRONE_COMMIT_SHA}）
+      - docker stack deploy -c docker-compose.yml weather-stack --with-registry-auth

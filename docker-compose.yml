@@ -1,0 +1,22 @@
+services:
+  weather:
+    image: registry.cn-chengdu.aliyuncs.com/luobai0110/weather:latest
+    environment:
+      - AMAP_KEY=8cb1cfc513ab1c2dab2bf5f428f81390
+      - SERVER_HOST=192.168.78.3
+      - MONGO_URL=mongodb://doomer:doomer%4012345@192.168.78.3:27017/
+      - POSTGRES_URL=postgresql://doomer:Doomer%40123@192.168.78.3:5432/data
+      - CONSUL_PORT=8500
+    ports:
+      - '8000:8000'
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    networks:
+      - nexus
+      - consul_consul-net
+networks:
+  nexus:
+  consul_consul-net:
+    external: true
