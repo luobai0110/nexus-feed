@@ -19,8 +19,6 @@ services:
 steps:
   - name: build-and-push
     image: docker:24.0.2-dind
-    when:
-      branch: [ release/*, test/* ]
     environment:
       DOCKER_HOST: tcp://dind:2375
       DOCKER_USERNAME:
@@ -40,8 +38,6 @@ steps:
 
   - name: deploy-swarm
     image: docker:24.0.2-dind
-    when:
-      branch: [ release/*, test/* ]
     environment:
       DOCKER_HOST: tcp://dind:2375
     commands:
@@ -52,6 +48,3 @@ steps:
         done
       - echo "Docker daemon is ready."
       - docker stack deploy -c docker-compose.yml weather-stack --with-registry-auth
-when:
-  event: push
-  branch: [ release/*, test/* ]
