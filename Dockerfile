@@ -34,4 +34,4 @@ COPY . .
 EXPOSE 8000
 
 # 运行应用
-CMD["python", "main.py"]
+CMD ["python", "main.py"]

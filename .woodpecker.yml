@@ -3,38 +3,36 @@ clone:
     image: woodpeckerci/plugin-git
     settings:
       skip-verify: true
+services:
+  - name: dind
+    image: docker:24.0.2-dind
+    privileged: true
+    volumes:
+      - /var/lib/docker
+    commands: [ "--storage-driver=overlay2", "--insecure-registry=registry.cn-chengdu.aliyuncs.com"]
 
 steps:
   - name: build-and-push
     image: docker:24.0.2-dind
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      branch: [release/*, test/*]
     environment:
       DOCKER_USERNAME:
         from_secret: DOCKER_USERNAME
       DOCKER_PASSWORD:
         from_secret: DOCKER_PASSWORD
     commands:
-      - dockerd-entrypoint.sh &
-      - |
-        # 等待 docker daemon 就绪
-        until docker info 2>/dev/null; do
-          echo "Waiting for docker daemon..."
-          sleep 1
-        done
       - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
       - docker build -t registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA} .
       - docker push registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${CI_COMMIT_SHA}
 
   - name: deploy-swarm
     image: docker:24.0.2-dind
+    when:
+      branch: [release/*, test/*]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - dockerd-entrypoint.sh &
-      - |
-        until docker info 2>/dev/null; do
-          echo "Waiting for docker daemon..."
-          sleep 1
-        done
       - docker stack deploy -c docker-compose.yml weather-stack --with-registry-auth
