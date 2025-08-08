@@ -9,6 +9,8 @@ steps:
     image: docker:24.0.2-dind
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      event: [push, pull_request]
     environment:
       DOCKER_USERNAME:
         from_secret: DOCKER_USERNAME
@@ -22,7 +24,7 @@ steps:
           echo "Waiting for docker daemon..."
           sleep 1
         done
-      - export IMAGE_TAG=$(date +"%Y%m%d-%H%M%S")
+      - export IMAGE_TAG=$(TZ=Asia/Shanghai date +"%Y%m%d%H%M%S")
       - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
       - docker build -t registry.cn-chengdu.aliyuncs.com/luobai0110/weather:$IMAGE_TAG .
       - docker push registry.cn-chengdu.aliyuncs.com/luobai0110/weather:$IMAGE_TAG
@@ -30,6 +32,8 @@ steps:
 
   - name: deploy-swarm
     image: docker:24.0.2-dind
+    when:
+      event: [push, pull_request]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
@@ -46,11 +50,3 @@ steps:
         's|image: registry.cn-chengdu.aliyuncs.com/luobai0110/weather:.*|image: $IMAGE_NAME|g'
         docker-compose.yml
       - docker stack deploy -c docker-compose.yml nexus --with-registry-auth
-  - name: cleanup-docker-cache
-    image: docker:24.0.2-dind
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - docker builder prune -f  # 删除构建缓存
-      - docker image prune -a -f # 删除悬空镜像
-      - docker system df
