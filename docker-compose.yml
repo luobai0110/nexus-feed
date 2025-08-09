@@ -13,10 +13,14 @@ services:
       replicas: 2
       restart_policy:
         condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+    pull_policy: always
     networks:
       - nexus
-      - consul_consul-net
+      - consul-net
 networks:
   nexus:
-  consul_consul-net:
+  consul-net:
     external: true
