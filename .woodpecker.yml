@@ -45,4 +45,4 @@ steps:
         sed -i
         's|image: registry.cn-chengdu.aliyuncs.com/luobai0110/weather:.*|image: $IMAGE_NAME|g'
         docker-compose.yml
-      - docker stack deploy -c docker-compose.yml nexus --with-registry-auth
+      - docker stack deploy -c docker-compose.yml nexus
