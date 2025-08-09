@@ -5,7 +5,7 @@ from bson import ObjectId
 import requests
 from dotenv import load_dotenv
 
-from tools import mongo_dao
+from tools import mongo_dao, utils
 
 load_dotenv()
 amap_key = os.getenv("AMAP_KEY")
@@ -24,6 +24,7 @@ def get_weather_data(city="330108"):
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
+        data['_id'] = utils.generate_id(data)
         mongo_dao.save_weather_single_day_data(data)
         # 返回JSON格式数据而不是包含ObjectId的对象
         return json.dumps(data, cls=JSONEncoder)
@@ -34,6 +35,7 @@ def get_weather_multiple_day_data(city="330108"):
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
+        data['_id'] = utils.generate_id(data)
         mongo_dao.save_weather_multiple_day_data(data)
         # 返回JSON格式数据而不是包含ObjectId的对象
         return json.dumps(data, cls=JSONEncoder)

@@ -5,7 +5,7 @@ from tools.city_dao import CityDao
 from tools.database_pg import get_db_session
 from data_collectors.weather import get_weather_data, get_weather_multiple_day_data
 
-weather_bp = Blueprint('weather', __name__, url_prefix="/weather")
+weather_bp = Blueprint('weather', __name__, url_prefix="/api/nexus-feed/weather")
 db_session = get_db_session()
 city_dao = CityDao(db_session)
 

@@ -7,7 +7,9 @@ import uuid
 import consul
 from dotenv import load_dotenv
 from flask import Flask, jsonify
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
+from controllers.github_controllers import github_bp
 from controllers.weather_controller import weather_bp
 load_dotenv()
 host = os.getenv("SERVER_HOST")
@@ -15,9 +17,22 @@ app = Flask(__name__)
 
 
 app.register_blueprint(weather_bp)
+app.register_blueprint(github_bp)
 @app.route('/')
 def hello_world():
     return '<h1>nexus-feed</h1>'
+
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "healthy",
+        "registered_in_consul": register_success,
+        "service_name": SERVICE_NAME,
+        "service_id": SERVICE_ID,
+        "ip": SERVICE_IP,
+        "port": SERVICE_PORT,
+        "uptime_seconds": round(time.time() - START_TIME, 2)
+    }), 200
 
 def get_host_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -50,17 +65,6 @@ def register_service():
     print(f"Registered service {SERVICE_ID} to Consul")
 
 
-@app.route("/health")
-def health():
-    return jsonify({
-        "status": "healthy",
-        "registered_in_consul": register_success,
-        "service_name": SERVICE_NAME,
-        "service_id": SERVICE_ID,
-        "ip": SERVICE_IP,
-        "port": SERVICE_PORT,
-        "uptime_seconds": round(time.time() - START_TIME, 2)
-    }), 200
 
 
 def deregister_from_consul():

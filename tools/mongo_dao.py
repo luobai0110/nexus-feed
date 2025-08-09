@@ -18,3 +18,12 @@ def save_weather_multiple_day_data(data):
     collection = db['multiple_day_weather']
     result = collection.insert_one(data)
     return result.inserted_id
+
+def save_github_trending_data(data):
+    collection = db['github_trending']
+    result = collection.insert_one(data)
+    return result.inserted_id
+
+def save_github_trending_data_all(data):
+    collection = db['github_trending']
+    collection.insert_many(data)
