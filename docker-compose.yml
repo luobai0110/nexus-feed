@@ -15,8 +15,8 @@ services:
         condition: on-failure
     networks:
       - nexus
-      - consul_consul-net
+      - consul-net
 networks:
   nexus:
-  consul_consul-net:
+  consul-net:
     external: true
