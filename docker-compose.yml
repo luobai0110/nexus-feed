@@ -1,6 +1,6 @@
 services:
   weather:
-    image: registry.cn-chengdu.aliyuncs.com/luobai0110/weather:${IMAGE_TAG}
+    image: registry.cn-chengdu.aliyuncs.com/luobai0110/weather:latest
     environment:
       - AMAP_KEY=8cb1cfc513ab1c2dab2bf5f428f81390
       - SERVER_HOST=192.168.78.3
