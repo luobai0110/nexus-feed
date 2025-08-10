@@ -7,6 +7,8 @@ clone:
 steps:
   - name: build-and-push
     image: docker:24.0.2-dind
+    when:
+      branch: [ refs/heads/test/*, refs/heads/release/* ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
@@ -30,6 +32,8 @@ steps:
 
   - name: deploy-swarm
     image: docker:24.0.2-dind
+    when:
+      branch: [ refs/heads/test/*, refs/heads/release/* ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
