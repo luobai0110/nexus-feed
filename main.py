@@ -25,11 +25,11 @@ SERVICE_NAME = os.getenv("SERVICE_NAME", "nexus-feed")
 NACOS_PORT = os.getenv("NACOS_PORT", 8848)
 NACOS_GROUP = os.getenv("NACOS_GROUP", "DEFAULT_GROUP")
 
-client = nacos.NacosClient(SERVER_HOST + ":" + NACOS_PORT, namespace="public")
+client = nacos.NacosClient(f"{SERVER_HOST}:{NACOS_PORT}", namespace="public")
 SERVICE_IP = socket.gethostbyname(socket.gethostname())
 
 nacos_registry = NacosServiceRegistry(
-    server_addresses=SERVER_HOST + ":" + NACOS_PORT,
+    server_addresses=f"{SERVER_HOST}:{NACOS_PORT}",
     namespace="public",
     group="DEFAULT_GROUP"
 )
