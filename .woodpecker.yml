@@ -9,8 +9,6 @@ steps:
     image: docker:24.0.2-dind
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    when:
-      event: [push, pull_request]
     environment:
       DOCKER_USERNAME:
         from_secret: DOCKER_USERNAME
@@ -32,8 +30,6 @@ steps:
 
   - name: deploy-swarm
     image: docker:24.0.2-dind
-    when:
-      event: [push, pull_request]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
@@ -49,4 +45,4 @@ steps:
         sed -i
         's|image: registry.cn-chengdu.aliyuncs.com/luobai0110/weather:.*|image: $IMAGE_NAME|g'
         docker-compose.yml
-      - docker stack deploy -c docker-compose.yml nexus --with-registry-auth
+      - docker stack deploy -c docker-compose.yml nexus

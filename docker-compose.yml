@@ -7,8 +7,6 @@ services:
       - MONGO_URL=mongodb://doomer:doomer%4012345@192.168.78.3:27017/
       - POSTGRES_URL=postgresql://doomer:Doomer%40123@192.168.78.3:5432/data
       - CONSUL_PORT=8500
-    ports:
-      - '8000:8000'
     deploy:
       replicas: 2
       restart_policy:
