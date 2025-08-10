@@ -43,7 +43,7 @@ steps:
           echo "Waiting for Docker daemon...";
           sleep 2;
         done
-      - export IMAGE_TAG=$(cat .image_tag 2>/dev/null || date +"%Y%m%d-%H%M%S")
+      - export IMAGE_TAG=$(cat .image_tag 2>/dev/null || date +"%Y%m%d%H%M%S")
       - export IMAGE_NAME=registry.cn-chengdu.aliyuncs.com/luobai0110/weather:$IMAGE_TAG
       - >
         sed -i
