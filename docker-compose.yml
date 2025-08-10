@@ -17,8 +17,6 @@ services:
         delay: 10s
     networks:
       - nexus
-      - consul-net
 networks:
   nexus:
-  consul-net:
-    external: true
+    name: nexus
