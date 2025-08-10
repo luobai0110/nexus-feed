@@ -15,9 +15,6 @@ headers = {
     'Connection': 'keep-alive',
 }
 
-
-
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
@@ -28,9 +25,8 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 
-
 def scrape_github_trending(language=None, since='weekly'):
-    if language is None:
+    if language is None or language == '':
         trending_url = f'https://github.com/trending?since={since}'
     else:
         trending_url = f'https://github.com/trending/{language}?since={since}'
