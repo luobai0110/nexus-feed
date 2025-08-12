@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-feed
+  labels:
+    app: nexus-feed
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nexus-feed
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: nexus-feed
+    spec:
+      containers:
+        - name: nexus-feed
+          image: registry.cn-chengdu.aliyuncs.com/luobai0110/nexus-feed:20250810180346
+          env:
+            - name: AMAP_KEY
+              value: "8cb1cfc513ab1c2dab2bf5f428f81390"
+            - name: SERVER_HOST
+              value: "192.168.78.3"
+            - name: MONGO_URL
+              value: "mongodb://doomer:doomer%4012345@192.168.78.3:27017/"
+            - name: POSTGRES_URL
+              value: "postgresql://doomer:Doomer%40123@192.168.78.3:5432/data"
+            - name: CONSUL_PORT
+              value: "8500"
+            - name: CONSUL_HOST
+              value: "192.168.78.3"
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-feed
+spec:
+  selector:
+    app: nexus-feed
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  type: ClusterIP
