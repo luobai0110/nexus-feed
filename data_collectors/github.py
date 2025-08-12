@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from tools import mongo_dao
-from tools.utils import generate_id
+from tools import utils
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -65,17 +65,9 @@ def scrape_github_trending(language=None, since='weekly'):
                 fork_elem = item.find('a', href=lambda x: x and '/forks' in x)
                 forks = fork_elem.get_text(strip=True) if fork_elem else "0"
                 read_me = get_readme(repo_name)
-                repo_info = {
-                    'name': repo_name,
-                    'description': description,
-                    'language': language,
-                    'stars': stars,
-                    'today_stars': today_stars,
-                    'forks': forks,
-                    'url': f"https://github.com/{repo_name}",
-                    'readme': read_me
-                }
-                repo_info['_id'] = generate_id(repo_info)
+                repo_info = {'name': repo_name, 'description': description, 'language': language, 'stars': stars,
+                             'today_stars': today_stars, 'forks': forks, 'url': f"https://github.com/{repo_name}",
+                             'readme': read_me, '_id': utils.generate_id_str(repo_name)}
                 mongo_dao.save_github_trending_data(repo_info)
                 logger.info(repo_info)
                 _trending_repo.append(repo_info)

@@ -8,3 +8,8 @@ def generate_id(_dict):
     repo_str = json.dumps({k: v for k, v in _dict.items() if k != '_id'}, sort_keys=True)
     # Generate SHA256 hash
     return hashlib.sha256(repo_str.encode('utf-8')).hexdigest()
+
+
+# Generate a unique hash ID based on name
+def generate_id_str(name: str):
+    return hashlib.sha256(name.encode('utf-8')).hexdigest()

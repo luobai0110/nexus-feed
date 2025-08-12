@@ -8,13 +8,13 @@ from data_collectors.github import scrape_github_trending
 github_bp = Blueprint('github', __name__, url_prefix=f"{URL_PREFIX}/github")
 
 SINCE = {
-    'daily': 'daily',
-    'weekly': 'weekly',
-    'monthly': 'monthly'
+    'daily': 'DAILY',
+    'weekly': 'WEEKLY',
+    'monthly': 'MONTHLY'
 }
 
 
-@github_bp.route('')
+@github_bp.route('/trending')
 def save_trending_data():
     query_params = request.args.to_dict()
     _language = query_params.get('language', '')
