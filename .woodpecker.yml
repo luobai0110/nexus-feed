@@ -3,6 +3,9 @@ clone:
     image: woodpeckerci/plugin-git
     settings:
       skip-verify: true
+when:
+  - event: push
+    branch: [ refs/heads/test/*, refs/heads/release/*, refs/heads/main, test/*, release/* ]
 
 steps:
   - name: build-and-push
