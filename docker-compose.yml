@@ -6,7 +6,8 @@ services:
       - SERVER_HOST=192.168.78.3
       - MONGO_URL=mongodb://doomer:doomer%4012345@192.168.78.3:27017/
       - POSTGRES_URL=postgresql://doomer:Doomer%40123@192.168.78.3:5432/data
-      - CONSUL_PORT=8500
+      - NACOS_GROUP=DEFAULT_GROUP
+      - NACOS_NAMESPACE=public
     deploy:
       replicas: 2
       restart_policy:

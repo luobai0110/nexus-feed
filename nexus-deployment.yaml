@@ -31,12 +31,12 @@ spec:
               value: "mongodb://doomer:doomer%4012345@192.168.78.3:27017/"
             - name: POSTGRES_URL
               value: "postgresql://doomer:Doomer%40123@192.168.78.3:5432/data"
-            - name: CONSUL_PORT
-              value: "8500"
-            - name: CONSUL_HOST
-              value: "192.168.78.3"
+            - name: NACOS_GROUP
+              value: "DEFAULT_GROUP"
+            - name: NACOS_NAMESPACE
+              value: "k3s"
           ports:
-            - containerPort: 80
+            - containerPort: 8000
 ---
 apiVersion: v1
 kind: Service
@@ -48,5 +48,5 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 80
+      targetPort: 8000
   type: ClusterIP
