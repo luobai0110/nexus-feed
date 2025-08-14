@@ -53,7 +53,7 @@ steps:
 
       - |
         if kubectl get deployment nexus-feed -n prod 2>/dev/null; then
-          kubectl set image deployment/nexus-feed nexus-feed:=$IMAGE_NAME -n prod
+          kubectl set image deployment/nexus-feed nexus-feed=$IMAGE_NAME -n prod
         else
           kubectl apply -f .deploy/k8s.yaml -n prod
         fi
