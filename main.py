@@ -26,7 +26,7 @@ NACOS_PORT = os.getenv("NACOS_PORT", 8848)
 NACOS_GROUP = os.getenv("NACOS_GROUP", "DEFAULT_GROUP")
 NACOS_NAMESPACE = os.getenv("NACOS_NAMESPACE", "public")
 
-client = nacos.NacosClient(f"{SERVER_HOST}:{NACOS_PORT}", namespace="public")
+client = nacos.NacosClient(f"{SERVER_HOST}:{NACOS_PORT}", namespace=NACOS_NAMESPACE)
 SERVICE_IP = socket.gethostbyname(socket.gethostname())
 
 nacos_registry = NacosServiceRegistry(

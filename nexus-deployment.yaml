@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: nexus-feed
-          image: registry.cn-chengdu.aliyuncs.com/luobai0110/nexus-feed:20250810180346
+          image: registry.cn-chengdu.aliyuncs.com/doomer/nexus-feed:v1
           env:
             - name: AMAP_KEY
               value: "8cb1cfc513ab1c2dab2bf5f428f81390"
