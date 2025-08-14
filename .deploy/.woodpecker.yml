@@ -9,30 +9,22 @@ clone:
 
 steps:
   - name: build-and-push
-    image: docker:24.0.2-dind
+    image: ghcr.io/containerd/nerdctl:1.7.7
     when:
       - event: push
         branch: [ test/*, release/*, main ]
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       DOCKER_USERNAME:
         from_secret: DOCKER_USERNAME
       DOCKER_PASSWORD:
         from_secret: DOCKER_PASSWORD
     commands:
-      - dockerd-entrypoint.sh &
-      - |
-        # 等待 docker daemon 就绪
-        until docker info 2>/dev/null; do
-          echo "Waiting for docker daemon..."
-          sleep 1
-        done
       - export IMAGE_TAG=$(TZ=Asia/Shanghai date +"%Y%m%d%H%M%S")
-      - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
-      - docker build -t registry.cn-chengdu.aliyuncs.com/doomer/nexus-feed:$IMAGE_TAG .
-      - docker push registry.cn-chengdu.aliyuncs.com/doomer/nexus-feed:$IMAGE_TAG
+      - nerdctl login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.cn-chengdu.aliyuncs.com
+      - nerdctl build -t registry.cn-chengdu.aliyuncs.com/doomer/nexus-feed:$IMAGE_TAG .
+      - nerdctl push registry.cn-chengdu.aliyuncs.com/doomer/nexus-feed:$IMAGE_TAG
       - echo $IMAGE_TAG > .image_tag
+      - nerdctl rmi registry.cn-chengdu.aliyuncs.com/doomer/nexus-feed:$IMAGE_TAG
 
   - name: deploy-k8s
     image: bitnami/kubectl:1.33
@@ -44,7 +36,6 @@ steps:
         from_secret: KUBE_CONFIG
     commands:
       - |
-        # 创建 kubeconfig 文件
         mkdir -p ~/.kube
         echo "$KUBE_CONFIG" > ~/.kube/config
         chmod 600 ~/.kube/config
@@ -58,8 +49,5 @@ steps:
           kubectl apply -f .deploy/k8s.yaml -n prod
         fi
 
-      # 等待部署完成
       - kubectl rollout status deployment/nexus-feed -n prod --timeout=300s
-
-      # 查看部署状态
       - kubectl get pods -n prod | grep nexus-feed
