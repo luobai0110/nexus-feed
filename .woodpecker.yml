@@ -5,14 +5,14 @@ clone:
       skip-verify: true
     when:
       - event: push
-        branch: [ refs/heads/test/*, refs/heads/release/*, refs/heads/main, test/*, release/* ]
+        branch: [ refs/heads/test/*, refs/heads/release/*, refs/heads/main, test/*, release/*, main ]
 
 steps:
   - name: build-and-push
     image: docker:24.0.2-dind
     when:
       - event: push
-        branch: [ refs/heads/test/*, refs/heads/release/*, refs/heads/main, test/*, release/* ]
+        branch: [ refs/heads/test/*, refs/heads/release/*, refs/heads/main, test/*, release/*, main ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
@@ -38,7 +38,7 @@ steps:
     image: bitnami/kubectl:1.33
     when:
       - event: push
-        branch: [ refs/heads/test/*, refs/heads/release/*, refs/heads/main, test/*, release/* ]
+        branch: [ refs/heads/test/*, refs/heads/release/*, refs/heads/main, test/*, release/*,  main ]
     environment:
       KUBE_CONFIG:
         from_secret: KUBE_CONFIG
